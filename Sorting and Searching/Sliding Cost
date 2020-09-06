@@ -1,0 +1,85 @@
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+#define ll long long
+#define sz 200100
+typedef tree<pair<ll, ll>, null_type, less<pair<ll, ll>>, rb_tree_tag, tree_order_statistics_node_update> pbds;
+ll sm[sz];
+ll cnt[sz];
+void upd(ll idx, ll tr[], ll add)
+{
+	while (idx < sz)
+	{
+		tr[idx] += add;
+		idx += (idx & (-idx));
+	}
+}
+ll que(ll idx, ll tr[])
+{
+	ll sum = 0;
+	while (idx)
+	{
+		sum += tr[idx];
+		idx -= (idx & (-idx));
+	}
+	return sum;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	ll n, k, idx, mid, cntlow, cnthigh, sumlow, sumhigh, low, high;
+	cin >> n >> k;
+	vector<ll>a(n), b(n);
+	pbds s;
+	for (ll i = 0; i < n; i++)
+	{
+		cin >> a[i];
+		b[i] = a[i];
+	}
+	sort(b.begin(), b.end());
+	for (ll i = 0; i < k; i++)
+	{
+		idx = lower_bound(b.begin(), b.end(), a[i]) - b.begin() + 1;
+		upd(idx, sm, a[i]);
+		upd(idx, cnt, 1);
+		s.insert({a[i], i});
+	}
+	for (ll i = k; i < n; i++)
+	{
+		mid = (*s.find_by_order(k / 2)).first;
+		idx = lower_bound(b.begin(), b.end(), mid) - b.begin() + 1;
+		cntlow = que(idx - 1, cnt);
+		sumlow = que(idx - 1, sm);
+		cnthigh = que(n + 1, cnt) - que(idx, cnt);
+		sumhigh = que(n + 1, sm) - que(idx, sm);
+		high = sumhigh - (cnthigh * mid);
+		low = (cntlow * mid) - sumlow;
+		cout << low + high << " ";
+ 
+		idx = lower_bound(b.begin(), b.end(), a[i - k]) - b.begin() + 1;
+		upd(idx, sm, -a[i - k]);
+		upd(idx, cnt, -1);
+		s.erase({a[i - k], i - k});
+ 
+		idx = lower_bound(b.begin(), b.end(), a[i]) - b.begin() + 1;
+		upd(idx, sm, a[i]);
+		upd(idx, cnt, 1);
+		s.insert({a[i], i});
+	}
+ 
+	mid = (*s.find_by_order(k / 2)).first;
+	// cout << mid << ": ";
+	idx = lower_bound(b.begin(), b.end(), mid) - b.begin() + 1;
+	cntlow = que(idx - 1, cnt);
+	sumlow = que(idx - 1, sm);
+	cnthigh = que(n + 1, cnt) - que(idx, cnt);
+	sumhigh = que(n + 1, sm) - que(idx, sm);
+	high = sumhigh - (cnthigh * mid);
+	low = (cntlow * mid) - sumlow;
+	cout << low + high << endl;
+ 
+	return 0;
+}

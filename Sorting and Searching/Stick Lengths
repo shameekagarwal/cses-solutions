@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	ll n; cin >> n;
+	vector<ll>a(n);
+	for (auto&it : a)
+		cin >> it;
+	sort(a.begin(), a.end());
+	ll left = 0;
+	ll right = 0;
+	for (auto it : a)
+		right += it;
+	ll ans = LLONG_MAX;
+	for (ll i = 0; i < n; i++)
+	{
+		left += a[i];
+		right -= a[i];
+		ans = min(ans, (i + 1) * a[i] - left + (right - (n - i - 1) * a[i]));
+	}
+	cout << ans;
+ 
+	return 0;
+}

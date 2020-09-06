@@ -1,0 +1,51 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+int n;
+vector<vector<ll>>tab;
+vector<int>Log;
+void build(vector<ll>&pre)
+{
+	int k = n + 1;
+	Log = vector<int>(k + 1);
+	Log.at(0) = Log.at(1) = 0;
+	for (int i = 2; i <= k; i++)
+		Log.at(i) = Log.at(i / 2) + 1;
+	tab = vector<vector<ll>>(Log.at(k), vector<ll>(k));
+	for (int i = 0; i < k; i++)
+		tab.at(0).at(i) = pre.at(i);
+	for (int i = 1; i < Log.at(k); i++)
+	{
+		for (int j = 0; j + (1 << i) <= k; j++)
+			tab.at(i).at(j) = min(tab.at(i - 1).at(j), tab.at(i - 1).at(j + (1 << (i - 1))));
+	}
+}
+ll mn(int L, int R)
+{
+	int sz = R - L + 1;
+	return min(tab.at(Log.at(sz)).at(L), tab.at(Log.at(sz)).at(R - (1 << Log.at(sz)) + 1));
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	int a, b; cin >> n >> a >> b; vector<ll>ar(n), pre(n + 1);
+	pre.at(0) = 0;
+	for (int i = 0; i < n; i++)
+	{
+		cin >> ar.at(i);
+		pre.at(i + 1) = pre.at(i) + ar.at(i);
+	}
+	build(pre);
+	ll ans = LLONG_MIN;
+	for (int i = a; i <= n; i++)
+	{
+		if (i <= b)
+			ans = max(ans, pre[i] - mn(0, i - a));
+		else
+			ans = max(ans, pre[i] - mn(i - b, i - a));
+	}
+	cout << ans;
+	return 0;
+}

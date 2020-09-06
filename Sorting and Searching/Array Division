@@ -1,0 +1,54 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+vector<ll>a;
+ll n, k;
+ll check(ll m)
+{
+	ll cur = 0;
+	ll ans = 1;
+	for (auto it : a)
+	{
+		if (it > m)
+			return k + 1;
+		if (it + cur <= m)
+			cur += it;
+		else
+		{
+			cur = it;
+			ans++;
+		}
+	}
+	return ans;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	cin >> n >> k;
+	a = vector<ll>(n);
+	for (auto&it : a)
+		cin >> it;
+	ll s = 0;
+	ll e = 0;
+	for (auto it : a)
+		e += it;
+	ll ans = e;
+	while (s <= e)
+	{
+		ll m = (s + e) / 2;
+		ll need = check(m);
+		if (need <= k)
+		{
+			ans = m;
+			e = m - 1;
+		}
+		else
+			s = m + 1;
+	}
+	cout << ans;
+	return 0;
+}

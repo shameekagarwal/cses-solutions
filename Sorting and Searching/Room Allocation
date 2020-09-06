@@ -1,0 +1,60 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+struct node
+{
+	int day, status, id;
+	bool operator<(const node &a) const
+	{
+		if (day != a.day)
+			return day < a.day;
+		// prefering arrival
+		return status < a.status;
+	}
+};
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	int n; cin >> n;
+	vector<node>ar;
+	for (int i = 0; i < n; i++)
+	{
+		int a, b; cin >> a >> b;
+		ar.push_back({a, 1, i});
+		ar.push_back({b, 2, i});
+	}
+	sort(ar.begin(), ar.end());
+	vector<int>ans(n);
+	int maxrooms = 1;
+	int rooms = 0;
+	set<int>availablerooms;
+	for (auto it : ar)
+	{
+		if (it.status == 1)
+		{
+			rooms++;
+			if (availablerooms.size() == 0)
+				ans[it.id] = rooms;
+			else
+			{
+				auto currentroom = availablerooms.begin();
+				ans[it.id] = *currentroom;
+				availablerooms.erase(currentroom);
+			}
+		}
+		else
+		{
+			availablerooms.insert(ans[it.id]);
+			rooms--;
+		}
+		maxrooms = max(maxrooms, rooms);
+	}
+	cout << maxrooms << "\n";
+	for (auto it : ans)
+		cout << it << " ";
+	return 0;
+}

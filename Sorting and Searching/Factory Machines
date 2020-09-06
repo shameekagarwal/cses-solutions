@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+vector<ll>a;
+ll n;
+// products that can be manufactured
+// in time tim
+ll poss(ll tim)
+{
+	ll manufacture = 0;
+	for (auto it : a)
+		manufacture += (tim / it);
+	return manufacture;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	ll t; cin >> n >> t;
+	a = vector<ll>(n);
+	for (auto&it : a)
+		cin >> it;
+	ll s = 0;
+	ll mn = LLONG_MAX;
+	for (auto it : a)
+		mn = min(mn, it);
+	ll e = t * mn;
+	ll ans = e;
+	while (s <= e)
+	{
+		ll m = (s + e) / 2;
+		if (poss(m) >= t)
+		{
+			e = m - 1;
+			ans = m;
+		}
+		else
+			s = m + 1;
+	}
+	cout << ans;
+	return 0;
+}

@@ -1,0 +1,27 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	ll n; cin >> n;
+	vector<ll>a(n);
+	for (auto&it : a)
+		cin >> it;
+	map<ll, ll>mp;
+	mp[0] = 1;
+	ll cur = 0;
+	ll ans = 0;
+	for (ll i = 0; i < n; i++)
+	{
+		cur = (cur + a[i]) % n;
+		cur = (cur + n) % n;
+		ans += mp[cur];
+		mp[cur]++;
+	}
+	cout << ans;
+	return 0;
+}

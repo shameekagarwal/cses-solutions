@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n; cin >> n;
+	vector<int>a(n);
+	for (auto&it : a)
+		cin >> it;
+	int e = 0;
+	int s = 0;
+	int ans = 0;
+	set<int>us;
+	while (e < n)
+	{
+		while (e < n && !us.count(a[e]))
+		{
+			us.insert(a[e]);
+			e++;
+		}
+		ans = max(ans, e - s);
+		if (e == n)
+			break;
+		while (us.count(a[e]))
+		{
+			us.erase(a[s]);
+			s++;
+		}
+	}
+	cout << ans;
+	return 0;
+}s

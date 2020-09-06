@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+struct node
+{
+	int sm, ai, bi;
+};
+bool cmp(node&a, node&b)
+{
+	if (a.sm == b.sm)
+	{
+		if (a.bi != b.bi)
+			return a.bi < b.bi;
+		return a.ai < b.ai;
+	}
+	return a.sm < b.sm;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	vector<node>a, b;
+	int n, x; cin >> n >> x;
+	vector<int>ar(n);
+	for (int i = 0; i < n; ++i)
+		cin >> ar[i];
+	for (int i = 0; i < n; ++i)
+	{
+		for (int j = i + 1; j < n; ++j)
+		{
+			a.push_back({ar[i] + ar[j], i + 1, j + 1});
+			b.push_back({ar[i] + ar[j], i + 1, j + 1});
+		}
+	}
+	sort(a.begin(), a.end(), cmp);
+	sort(b.begin(), b.end(), cmp);
+	int s = 0;
+	int e = b.size() - 1;
+	while (s < e)
+	{
+		if (a[s].sm + b[e].sm == x)
+		{
+			if ((a[s].ai != b[e].ai) && (a[s].ai != b[e].bi) && (a[s].bi != b[e].ai) && (a[s].bi != b[e].bi))
+			{
+				cout << a[s].ai << " " << a[s].bi << " " << b[e].ai << " " << b[e].bi << "\n";
+				return 0;
+			}
+			s++;
+			e--;
+		}
+		else if (a[s].sm + b[e].sm > x)
+			e--;
+		else
+			s++;
+	}
+	cout << "IMPOSSIBLE";
+	return 0;
+}

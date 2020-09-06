@@ -1,0 +1,35 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, x; cin >> n >> x;
+	vector<int>a(n);
+	for (auto&it : a)
+		cin >> it;
+	int s = 0;
+	int e = 0;
+	ll cur = 0;
+	ll ans = 0;
+	while (e < n)
+	{
+		while (e < n && cur < x)
+		{
+			cur += a[e];
+			e++;
+		}
+		while (cur >= x)
+		{
+			if (cur == x)
+				ans++;
+			cur -= a[s];
+			s++;
+		}
+	}
+	cout << ans;
+	return 0;
+}

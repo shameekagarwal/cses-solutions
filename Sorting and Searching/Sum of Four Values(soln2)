@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+bool check(ll a, ll b, ll c, ll d)
+{
+	bool ok = 1;
+	ok &= (a != c);
+	ok &= (a != d);
+	ok &= (b != c);
+	ok &= (b != d);
+	return ok;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	ll n, x; cin >> n >> x;
+	vector<ll>a(n);
+	for (auto&it : a)
+		cin >> it;
+	vector<vector<ll>>ar;
+	for (ll i = 0; i < n; i++)
+	{
+		for (ll j = i + 1; j < n; j++)
+			ar.push_back({a[i] + a[j], i + 1, j + 1});
+	}
+	ll k = ar.size();
+	map<ll, vector<vector<ll>>>mp;
+	for (ll i = 0; i < k; ++i)
+	{
+		for (auto it : mp[x - ar[i][0]])
+		{
+			if (check(it[0], it[1], ar[i][1], ar[i][2]))
+			{
+				cout << it[0] << " " << it[1] << " ";
+				cout << ar[i][1] << " " << ar[i][2] << "\n";
+				return 0;
+			}
+		}
+		mp[ar[i][0]].push_back({ar[i][1], ar[i][2]});
+	}
+	cout << "IMPOSSIBLE";
+	return 0;
+}

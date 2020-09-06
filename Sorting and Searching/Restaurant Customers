@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+struct node
+{
+	int v, status;
+	bool operator<(const node&a) const
+	{
+		return v < a.v;
+	}
+};
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	int n; cin >> n;
+	vector<node>a;
+	for (int i = 0; i < n; ++i)
+	{
+		int x, y; cin >> x >> y;
+		a.push_back({x, 1});
+		a.push_back({y, 2});
+	}
+	sort(a.begin(), a.end());
+	int ans = 0;
+	int cur = 0;
+	for (auto it : a)
+	{
+		if (it.status == 1)
+			cur++;
+		else
+			cur--;
+		ans = max(ans, cur);
+	}
+	cout << ans;
+ 
+	return 0;
+}
