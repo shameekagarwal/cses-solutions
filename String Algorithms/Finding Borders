@@ -1,0 +1,47 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	string s; cin >> s;
+	int n = s.length();
+	vector<int>lps(n);
+	lps[0] = 0;
+	int i = 1;
+	int len = 0;
+	while (i < n)
+	{
+		if (s[i] == s[len])
+		{
+			len++;
+			lps[i] = len;
+			i++;
+		}
+		else
+		{
+			if (len)
+				len = lps[len - 1];
+			else
+			{
+				lps[i] = 0;
+				i++;
+			}
+		}
+	}
+	int ans = n - 1;
+	vector<int>fin;
+	while (lps[ans])
+	{
+		fin.push_back(lps[ans]);
+		ans = lps[ans] - 1;
+	}
+	reverse(fin.begin(), fin.end());
+	for (auto it : fin)
+		cout << it << " ";
+ 
+	return 0;
+}

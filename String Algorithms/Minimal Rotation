@@ -1,0 +1,75 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define sz 2000100
+#define MOD 1000000007
+ll prehash[sz];
+ll prepow[sz];
+ll power(ll a, ll b)
+{
+	a %= MOD;
+	ll ans = 1;
+	while (b)
+	{
+		if (b & 1)
+			ans = (ans * a) % MOD;
+		b >>= 1;
+		a = (a * a) % MOD;
+	}
+	return ans;
+}
+ll get(ll L, ll R)
+{
+	ll ans = (((prehash[R] - prehash[L - 1]) % MOD) + MOD) % MOD;
+	ans = (ans * prepow[L - 1]) % MOD;
+	return ans;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	string s; cin >> s;
+	int m = s.length();
+	string t = s + s;
+	int n = t.length();
+	ll x = 1;
+	for (int i = 1; i <= n; ++i)
+	{
+		prehash[i] = (prehash[i - 1] + ((t[i - 1] - 'a') * x)) % MOD;
+		x = (x * 131) % MOD;
+	}
+	prepow[n] = power(power(131, n), MOD - 2);
+	for (int i = n - 1; i > -1; i--)
+		prepow[i] = (prepow[i + 1] * 131) % MOD;
+ 
+	int minidx = 1;
+	for (int i = 2; i <= m; ++i)
+	{
+		// lo - no characters match
+		// hi - all characters match
+		int lo = 0;
+		int hi = m;
+		int eq = 0;
+		while (lo <= hi)
+		{
+			ll mid = (lo + hi) / 2;
+			if (get(minidx, minidx + mid - 1) == get(i, i + mid - 1))
+			{
+				eq = mid;
+				lo = mid + 1;
+			}
+			else
+				hi = mid - 1;
+		}
+		// entire string not equal
+		if (eq != m)
+		{
+			if (t[i - 1 + eq] < t[minidx - 1 + eq])
+				minidx = i;
+		}
+	}
+	cout << t.substr(minidx - 1, m);
+ 
+	return 0;
+}

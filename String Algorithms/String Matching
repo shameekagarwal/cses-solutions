@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+vector<int> build(string &s)
+{
+	int n = s.length();
+	int i = 1;
+	int len = 0;
+	vector<int>lps(n);
+	lps[0] = 0;
+	while (i < n)
+	{
+		if (s[i] == s[len])
+		{
+			len++;
+			lps[i] = len;
+			i++;
+		}
+		else
+		{
+			if (len)
+				len = lps[len - 1];
+			else
+			{
+				lps[i] = 0;
+				i++;
+			}
+		}
+	}
+	return lps;
+}
+int kmp(vector<int>&lps, string &s, string &t)
+{
+	int n = s.length();
+	int m = t.length();
+	int i = 0;
+	int j = 0;
+	int cnt = 0;
+	while (i < n)
+	{
+		if (s[i] == t[j])
+		{
+			i++;
+			j++;
+		}
+		else
+		{
+			if (j)
+				j = lps[j - 1];
+			else
+				i++;
+		}
+		if (j == m)
+		{
+			cnt++;
+			j = lps[j - 1];
+		}
+	}
+	return cnt;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	string s, t; cin >> s >> t;
+	vector<int>lps = build(s);
+	cout << kmp(lps, s, t);
+	return 0;
+}

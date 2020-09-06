@@ -1,0 +1,48 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	string s; cin >> s;
+	int n = s.length();
+	string t = "#";
+	for (int i = 0; i < n; i++)
+	{
+		t += '$';
+		t += s[i];
+	}
+	t += "$@";
+	int m = t.length();
+	int C = 0;
+	int R = 0;
+	vector<int>ans(m, 0);
+	for (int i = 1; i < m - 1; i++)
+	{
+		int mirr = 2 * C - i;
+		if (i < R)
+			ans[i] = min(ans[mirr], R - i);
+		while (t[i + 1 + ans[i]] == t[i - 1 - ans[i]])
+			ans[i]++;
+		if (i + ans[i] > R)
+		{
+			C = i;
+			R = i + ans[i];
+		}
+	}
+	int idx = -1;
+	int mx = 0;
+	for (int i = 1; i < m - 1; i++)
+	{
+		if (ans[i] > mx)
+		{
+			mx = ans[i];
+			idx = i;
+		}
+	}
+	int sty = idx - mx + 1;
+	int stx = sty / 2 - 1;
+	cout << s.substr(stx, mx);
+	return 0;
+}
