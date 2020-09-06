@@ -1,0 +1,78 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+int par[sz];
+int child[sz];
+bool vis1[sz];
+bool vis2[sz];
+int ans[sz];
+stack<int>s;
+void dfs(int s)
+{
+	vis2[s] = 1;
+	if (!vis2[child[s]])
+		dfs(child[s]);
+	// child is visited
+	// but ans not assigned
+	// means node part of a cycle
+	// assign cyclelength
+	// to all nodes of the cycle
+	else if (!ans[child[s]])
+	{
+		int v = s;
+		int val = 0;
+		do
+		{
+			val++;
+			s = child[s];
+		} while (v != s);
+		do
+		{
+			ans[s] = val;
+			s = child[s];
+		} while (v != s);
+	}
+	// for all nodes not a part of a cycle
+	if (!ans[s])
+		ans[s] = ans[child[s]] + 1;
+}
+void build(int a)
+{
+	vis1[a] = 1;
+	if (!vis1[child[a]])
+		build(child[a]);
+	s.push(a);
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n; cin >> n;
+	for (int i = 1; i <= n; i++)
+	{
+		int x; cin >> x;
+		child[i] = x;
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if (!vis1[i])
+			build(i);
+	}
+	// now the calls to dfs
+	// will be from 'start' of a chain
+	while (!s.empty())
+	{
+		int x = s.top();
+		s.pop();
+		if (!vis2[x])
+		{
+			// cout << x << endl;
+			dfs(x);
+		}
+	}
+	for (int i = 1; i <= n; i++)
+		cout << ans[i] << " ";
+	return 0;
+}

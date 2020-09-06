@@ -1,0 +1,101 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ 
+vector<int>adj[550];
+int flow[2050];
+int cap[2050];
+int from[2050];
+int to[2050];
+vector<int>level;
+vector<int>ptr;
+int n;
+bool vis[550];
+ 
+bool bfs()
+{
+    level = vector<int>(n, -1);
+    queue<int>Q;
+    Q.push(0);
+    level[0] = 0;
+    while (!Q.empty())
+    {
+        int x = Q.front();
+        Q.pop();
+        for (auto it : adj[x])
+        {
+            if (level[to[it]] == -1 && cap[it] - flow[it] >= 1)
+            {
+                level[to[it]] = level[x] + 1;
+                Q.push(to[it]);
+            }
+        }
+    }
+    return (level[n - 1] != -1);
+}
+ 
+int dfs(int x, int c)
+{
+    if (x == n - 1)
+        return c;
+    for (int &i = ptr[x], it = adj[x][i]; i < adj[x].size(); i++, it = adj[x][i])
+    {
+        if ((cap[it] - flow[it] >= 1) && (level[to[it]] == level[x] + 1))
+        {
+            int cur = dfs(to[it], min(c, cap[it] - flow[it]));
+            if (cur)
+            {
+                flow[it] += cur;
+                flow[it ^ 1] -= cur;
+                return cur;
+            }
+        }
+    }
+    return 0;
+}
+ 
+void dfs1(int x)
+{
+    vis[x] = 1;
+    for (auto it : adj[x])
+    {
+        if (!vis[to[it]] && (cap[it] - flow[it] >= 1))
+            dfs1(to[it]);
+    }
+}
+ 
+int main()
+{
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    int m; cin >> n >> m;
+    for (int i = 0; i < m; i++)
+    {
+        int a, b; cin >> a >> b; a--; b--;
+        adj[a].push_back(2 * i);
+        adj[b].push_back(2 * i + 1);
+        cap[2 * i] = cap[2 * i + 1] = 1;
+        from[2 * i] = to[2 * i + 1] = a;
+        from[2 * i + 1] = to[2 * i] = b;
+    }
+    int ans = 0;
+    while (bfs())
+    {
+        ptr = vector<int>(n, 0);
+        int curflow = dfs(0, 1e9);
+        while (curflow)
+        {
+            ans += curflow;
+            curflow = dfs(0, 1e9);
+        }
+    }
+    cout << ans << "\n";
+    dfs1(0);
+    for (int i = 0; i < 2 * m; i++)
+    {
+        if (vis[from[i]] && !vis[to[i]])
+            cout << from[i] + 1 << " " << to[i] + 1 << "\n";
+    }
+ 
+    return 0;
+}

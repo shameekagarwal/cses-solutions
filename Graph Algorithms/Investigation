@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 100100
+#define MOD 1000000007
+#define ll long long
+vector<pair<int, int>>adj[sz];
+int minedges[sz];
+int maxedges[sz];
+ll dist[sz];
+ll ways[sz];
+bool vis[sz];
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m; cin >> n >> m;
+	while (m--)
+	{
+		int a, b, c; cin >> a >> b >> c;
+		adj[a].push_back({b, c});
+	}
+	priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<pair<ll, int>>>pq;
+	for (ll i = 1; i <= n; i++)
+		dist[i] = 1e16;
+	minedges[1] = maxedges[1] = 0;
+	ways[1] = 1;
+	pq.push({0, 1});
+	while (!pq.empty())
+	{
+		pair<ll, int>cur = pq.top();
+		pq.pop();
+		if (vis[cur.second])
+			continue;
+		vis[cur.second] = 1;
+		for (auto it : adj[cur.second])
+		{
+			if (it.second + cur.first == dist[it.first])
+			{
+				minedges[it.first] = min(minedges[it.first], minedges[cur.second] + 1);
+				maxedges[it.first] = max(maxedges[it.first], maxedges[cur.second] + 1);
+				pq.push({cur.first + it.second, it.first});
+				ways[it.first] = (ways[it.first] + ways[cur.second]) % MOD;
+			}
+			else if (it.second + cur.first < dist[it.first])
+			{
+				minedges[it.first] = minedges[cur.second] + 1;
+				maxedges[it.first] = maxedges[cur.second] + 1;
+				dist[it.first] = it.second + cur.first;
+				pq.push({cur.first + it.second, it.first});
+				ways[it.first] = ways[cur.second];
+			}
+		}
+	}
+	cout << dist[n] << " " << ways[n] << " " << minedges[n] << " " << maxedges[n];
+	return 0;
+}

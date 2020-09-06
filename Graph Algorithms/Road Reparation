@@ -1,0 +1,66 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 100100
+#define MOD 1000000007
+#define ll long long
+int par[sz];
+int rnk[sz];
+struct dsu
+{
+	dsu(int n)
+	{
+		for (int i = 1; i <= n; i++)
+		{
+			par[i] = i;
+			rnk[i] = 1;
+		}
+	}
+	int getp(int x)
+	{
+		if (par[x] == x)
+			return x;
+		return par[x] = getp(par[x]);
+	}
+	void unite(int u, int v)
+	{
+		if (rnk[u] < rnk[v])
+			swap(u, v);
+		par[v] = u;
+		if (rnk[u] == rnk[v])
+			rnk[u]++;
+	}
+};
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m; cin >> n >> m;
+	vector<vector<int>>edges;
+	while (m--)
+	{
+		int a, b, c; cin >> a >> b >> c;
+		edges.push_back({c, a, b});
+	}
+	sort(edges.begin(), edges.end());
+	dsu D(n);
+	ll ans = 0;
+	for (auto it : edges)
+	{
+		int u = D.getp(it[1]);
+		int v = D.getp(it[2]);
+		if (u == v)
+			continue;
+		D.unite(u, v);
+		ans += it[0];
+	}
+	unordered_set<int>comp;
+	for (int i = 1; i <= n; i++)
+		comp.insert(D.getp(i));
+	if (comp.size() > 1)
+	{
+		cout << "IMPOSSIBLE";
+		return 0;
+	}
+	cout << ans;
+	return 0;
+}

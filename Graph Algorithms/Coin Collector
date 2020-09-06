@@ -1,0 +1,86 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define ll long long
+ll coins[sz], coinsscc[sz], fin[sz];
+vector<int>adj[sz], adjR[sz], adjscc[sz];
+stack<int>st;
+bool vis[sz], vis2[sz];
+int color[sz];
+void dfs(int x)
+{
+	vis[x] = 1;
+	for (auto it : adj[x])
+	{
+		if (!vis[it])
+			dfs(it);
+	}
+	st.push(x);
+}
+void dfs2(int a, int c)
+{
+	color[a] = c;
+	for (auto it : adjR[a])
+	{
+		if (!color[it])
+			dfs2(it, c);
+	}
+}
+void dfs3(int x)
+{
+	vis2[x] = 1;
+	for (auto it : adjscc[x])
+	{
+		if (!vis2[it])
+			dfs3(it);
+		fin[x] = max(fin[x], fin[it]);
+	}
+	fin[x] += coinsscc[x];
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m; cin >> n >> m;
+	for (int i = 1; i <= n; ++i)
+		cin >> coins[i];
+	for (int i = 0; i < m; ++i)
+	{
+		int a, b; cin >> a >> b;
+		adj[a].push_back(b);
+		adjR[b].push_back(a);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if (!vis[i])
+			dfs(i);
+	}
+	while (!st.empty())
+	{
+		int x = st.top();
+		st.pop();
+		if (!color[x])
+			dfs2(x, x);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		coinsscc[color[i]] += coins[i];
+		for (auto it : adj[i])
+		{
+			if (color[i] != color[it])
+				adjscc[color[i]].push_back(color[it]);
+		}
+	}
+	ll ans = 0;
+	for (int i = 1; i <= n; i++)
+	{
+		// color[i] = i means no incoming edges
+		if (color[i] == i && !vis2[i])
+		{
+			dfs3(i);
+			ans = max(ans, fin[i]);
+		}
+	}
+	cout << ans;
+	return 0;
+}

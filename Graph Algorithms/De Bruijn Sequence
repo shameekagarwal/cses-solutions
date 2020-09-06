@@ -1,0 +1,36 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+unordered_set<string>us;
+vector<int>ans;
+void dfs(string s)
+{
+    string zero = s + '0';
+    string one = s + '1';
+    if (!us.count(zero))
+    {
+        us.insert(zero);
+        dfs(zero.substr(1));
+        ans.push_back(0);
+    }
+    if (!us.count(one))
+    {
+        us.insert(one);
+        dfs(one.substr(1));
+        ans.push_back(1);
+    }
+}
+int main()
+{
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+ 
+    int n; cin >> n;
+    string a = string(n - 1, '0');
+    dfs(a);
+    int l = pow(2, n);
+    for (int i = 0; i < l; i++)
+        cout << ans[i];
+    cout << a;
+    return 0;
+}

@@ -1,0 +1,52 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ 
+vector<int>adj[550];
+vector<int>boy_no;
+vector<bool>seen;
+ 
+bool dfs(int u)
+{
+    for (auto it : adj[u])
+    {
+        if (!seen[it])
+        {
+            seen[it] = 1;
+            if (boy_no[it] == -1 || dfs(boy_no[it]))
+            {
+                boy_no[it] = u;
+                return 1;
+            }
+        }
+    }
+    return 0;
+}
+ 
+int main()
+{
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+ 
+    int n, m, k; cin >> n >> m >> k;
+    for (int i = 0; i < k; i++)
+    {
+        int a, b; cin >> a >> b; a--; b--;
+        adj[a].push_back(b);
+    }
+    boy_no = vector<int>(m, -1);
+    int ans = 0;
+    for (int i = 0; i < n; i++)
+    {
+        seen = vector<bool>(m, 0);
+        if (dfs(i))
+            ans++;
+    }
+    cout << ans << "\n";
+    for (int i = 0; i < m; i++)
+    {
+        if (boy_no[i] != -1)
+            cout << boy_no[i] + 1 << " " << i + 1 << "\n";
+    }
+    return 0;
+}

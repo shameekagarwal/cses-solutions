@@ -1,0 +1,70 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 100100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+vector<int>adjR[sz];
+bool vis1[sz];
+bool vis2[sz];
+stack<int>st;
+void dfs1(int s)
+{
+	vis1[s] = 1;
+	for (auto it : adj[s])
+	{
+		if (!vis1[it])
+			dfs1(it);
+	}
+	st.push(s);
+}
+void dfs2(int x)
+{
+	vis2[x] = 1;
+	for (auto it : adjR[x])
+	{
+		if (!vis2[it])
+			dfs2(it);
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m; cin >> n >> m;
+	while (m--)
+	{
+		int a, b; cin >> a >> b;
+		adj[a].push_back(b);
+		adjR[b].push_back(a);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if (!vis1[i])
+			dfs1(i);
+	}
+	bool ok = 1;
+	int rt = -1;
+	while (!st.empty())
+	{
+		int x = st.top();
+		st.pop();
+		if (!vis2[x])
+		{
+			if (ok)
+			{
+				ok = 0;
+				rt = x;
+				dfs2(x);
+			}
+			else
+			{
+				cout << "NO\n";
+				cout << x << " " << rt << "\n";
+				exit(0);
+			}
+		}
+	}
+	cout << "YES\n";
+	return 0;
+}

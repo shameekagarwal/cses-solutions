@@ -1,0 +1,63 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 100100
+#define MOD 1000000007
+#define ll long long
+int rnk[sz];
+int par[sz];
+int size[sz];
+struct dsu
+{
+	int mxsize;
+	int comp;
+	dsu(int n)
+	{
+		for (int i = 0; i < n; ++i)
+		{
+			rnk[i] = 1;
+			par[i] = i;
+			size[i] = 1;
+		}
+		mxsize = 1;
+		comp = n;
+	}
+	int getp(int u)
+	{
+		if (u == par[u])
+			return u;
+		int x = getp(par[u]);
+		size[u] = size[x];
+		par[u] = x;
+		return x;
+	}
+	void merge(int u, int v)
+	{
+		int x = getp(u);
+		int y = getp(v);
+		if (x == y) return;
+		if (rnk[x] > rnk[y])
+			swap(x, y);
+		comp--;
+		par[x] = y;
+		size[y] = size[y] + size[x];
+		size[x] = size[y];
+		mxsize = max(mxsize, size[y]);
+		if (rnk[x] == rnk[y])
+			rnk[y]++;
+	}
+};
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q; cin >> n >> q;
+	dsu D(n);
+	while (q--)
+	{
+		int a, b; cin >> a >> b;
+		a--; b--;
+		D.merge(a, b);
+		cout << D.comp << " " << D.mxsize << "\n";
+	}
+	return 0;
+}
