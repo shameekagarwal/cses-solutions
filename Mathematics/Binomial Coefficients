@@ -1,0 +1,45 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define sz 1000100
+#define MOD 1000000007
+ll power(ll a, ll b)
+{
+    a = a % MOD;
+    ll res = 1;
+    while (b)
+    {
+        if (b & 1)
+            res = (res * a) % MOD;
+        b >>= 1;
+        a = (a * a) % MOD;
+    }
+    return res;
+}
+ll inv(ll a)
+{
+    return power(a, MOD - 2);
+}
+ll fact[sz];
+ll invfact[sz];
+int main()
+{
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    fact[0] = invfact[0] = 1;
+    for (ll i = 1; i < sz; i++)
+    {
+        fact[i] = (fact[i - 1] * i) % MOD;
+        invfact[i] = (invfact[i - 1] * inv(i)) % MOD;
+    }
+    ll n; cin >> n;
+    while (n--)
+    {
+        ll a, b; cin >> a >> b;
+        ll ans = fact[a];
+        ans = (ans * invfact[a - b]) % MOD;
+        ans = (ans * invfact[b]) % MOD;
+        cout << ans << "\n";
+    }
+    return 0;
+}

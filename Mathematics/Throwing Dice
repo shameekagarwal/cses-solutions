@@ -1,0 +1,49 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define MOD 1000000007
+vector<vector<ll>>T(6, vector<ll>(6, 0));
+vector<ll>init;
+vector<vector<ll>>id(6, vector<ll>(6, 0));
+vector<vector<ll>> mul(vector<vector<ll>>&a, vector<vector<ll>>&b)
+{
+	vector<vector<ll>>ans(6, vector<ll>(6, 0));
+	for (ll i = 0; i < 6; i++)
+	{
+		for (ll j = 0; j < 6; j++)
+		{
+			for (ll k = 0; k < 6; k++)
+				ans[i][j] = ((a[i][k] * b[k][j]) % MOD + ans[i][j]) % MOD;
+		}
+	}
+	return ans;
+}
+ll power(ll n)
+{
+	while (n)
+	{
+		if (n & 1)
+			id = mul(id, T);
+		T = mul(T, T);
+		n >>= 1;
+	}
+	ll ans = 0;
+	for (ll i = 0; i < 6; i++)
+		ans = (ans + (id[0][i] * init[i]) % MOD) % MOD;
+	return ans;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	for (ll i = 0; i < 5; i++)
+		T[i][i + 1] = 1;
+	for (ll i = 0; i < 6; i++)
+		T[5][i] = 1;
+	init = {1, 2, 4, 8, 16, 32};
+	for (ll i = 0; i < 6; i++)
+		id[i][i] = 1;
+	ll n; cin >> n;
+	cout << (n ? power(n - 1) : 0);
+	return 0;
+}

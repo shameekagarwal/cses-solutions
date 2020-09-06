@@ -1,0 +1,29 @@
+// I HAVE NO CLUE WHY THIS WORKS
+// I CANNOT RELATE THIS TO GAME THEORY
+ 
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	int t; cin >> t; while (t--) {
+		int n; cin >> n; vector<int>a(n);
+		for (auto &it : a)
+			cin >> it;
+		int sm = 0;
+		for (int i = 1; i < n; i += 2)
+			sm ^= a[i];
+		if (sm)
+			cout << "first\n";
+		else
+			cout << "second\n";
+	}
+ 
+ 
+ 
+	return 0;
+}

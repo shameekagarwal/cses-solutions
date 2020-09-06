@@ -1,0 +1,30 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define MOD 1000000007
+#define inv 500000004
+ll get(ll a)
+{
+    ll ans = ((a % MOD) * ((a + 1) % MOD)) % MOD;
+    ans = (ans * inv) % MOD;
+    return ans;
+}
+int main()
+{
+    ios::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    ll n; cin >> n;
+    ll ans = 0;
+    for (ll i = 1; i <= n;)
+    {
+        ll R = (n / (n / i));
+        ll x = (n / i) % MOD;
+        ll y = get(R);
+        ll z = get(i - 1);
+        ll cur = (x * ((y - z + MOD) % MOD)) % MOD;
+        ans = (ans + cur) % MOD;
+        i = R + 1;
+    }
+    cout << ans;
+    return 0;
+}

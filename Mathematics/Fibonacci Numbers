@@ -1,0 +1,42 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define MOD 1000000007
+struct mat
+{
+	ll a, b, c, d;
+	mat operator*(mat &x)
+	{
+		mat ans;
+		ans.a = ((a * x.a) % MOD + (b * x.c) % MOD) % MOD;
+		ans.b = ((a * x.b) % MOD + (b * x.d) % MOD) % MOD;
+		ans.c = ((c * x.a) % MOD + (d * x.c) % MOD) % MOD;
+		ans.d = ((c * x.b) % MOD + (d * x.d) % MOD) % MOD;
+		return ans;
+	}
+};
+ll power(ll n)
+{
+	mat T = {1, 1, 1, 0};
+	mat ans = {1, 0, 1, 0};
+	while (n)
+	{
+		if (n & 1)
+			ans = ans * T;
+		T = T * T;
+		// cout << T.a << " " << T.b << "\n" << T.c << " " << T.d << "\n\n";
+		n >>= 1;
+	}
+	return ans.c;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	ll n; cin >> n;
+	cout << (n ? power(n - 1) : 0);
+ 
+ 
+	return 0;
+}
