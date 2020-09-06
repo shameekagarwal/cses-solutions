@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 500100
+#define MOD 1000000007
+#define ll long long
+struct node
+{
+	int a, b, c;
+	bool operator <(node &t)
+	{
+		return b < t.b;
+	}
+};
+ll tr[sz];
+void upd(int i, ll v)
+{
+	for (int j = i; j < sz; j += (j & -j))
+		tr[j] = max(tr[j], v);
+}
+ll que(int i)
+{
+	ll v = 0;
+	for (; i; i -= (i & -i))
+		v = max(v, tr[i]);
+	return v;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n; cin >> n;
+	vector<node>ar(n);
+	vector<int>comp;
+	for (int i = 0; i < n; i++)
+	{
+		int a, b, c;
+		cin >> a >> b >> c;
+		ar[i] = {a, b, c};
+		comp.push_back(a);
+		comp.push_back(b);
+	}
+	sort(comp.begin(), comp.end());
+	int m = unique(comp.begin(), comp.end()) - comp.begin();
+	for (int i = 0; i < n; i++)
+	{
+		ar[i].a = lower_bound(comp.begin(), comp.end(), ar[i].a) - comp.begin() + 1;
+		ar[i].b = lower_bound(comp.begin(), comp.end(), ar[i].b) - comp.begin() + 1;
+	}
+	sort(ar.begin(), ar.end());
+	ll ans = 0;
+	for (int i = 0; i < n; i++)
+	{
+		ll v = que(ar[i].a - 1);
+		upd(ar[i].b, v + ar[i].c);
+	}
+	cout << que(ar[n - 1].b);
+	return 0;
+}

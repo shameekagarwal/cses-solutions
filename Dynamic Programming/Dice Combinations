@@ -1,0 +1,27 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+inline ll add(ll a, ll b)
+{
+	a = ((a % MOD) + MOD) % MOD;
+	b = ((b % MOD) + MOD) % MOD;
+	return (a + b) % MOD;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	int n; cin >> n;
+	vector<ll>ans(n + 1, 0);
+	ans[0] = 1;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = max(i - 6, 0); j <= i - 1; j++)
+			ans[i] = add(ans[i], ans[j]);
+	}
+	cout << ans[n];
+	return 0;
+}

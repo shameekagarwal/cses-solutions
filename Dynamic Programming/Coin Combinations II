@@ -1,0 +1,23 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, x; cin >> n >> x;
+	vector<int>coins(n);
+	for (auto &it : coins)
+		cin >> it;
+	vector<ll>dp(x + 1, 0);
+	dp[0] = 1;
+	for (auto it : coins)
+	{
+		for (int i = it; i <= x; i++)
+			dp[i] = (dp[i - it] + dp[i]) % MOD;
+	}
+	cout << dp[x];
+	return 0;
+}

@@ -1,0 +1,50 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define MOD 1000000007
+#define ll long long
+ll n;
+ll dp[510][130000];
+ll F(ll idx, ll sm)
+{
+	if (idx == n + 1)
+		return (sm == 0);
+	if (sm < 0)
+		return 0;
+	if (dp[idx][sm] != -1)
+		return dp[idx][sm];
+	return dp[idx][sm] = (F(idx + 1, sm) + F(idx + 1, sm - idx)) % MOD;
+}
+ll power(ll a, ll b)
+{
+	a = a % MOD;
+	ll res = 1;
+	while (b)
+	{
+		if (b & 1)
+			res = (res * a) % MOD;
+		b >>= 1;
+		a = (a * a) % MOD;
+	}
+	return res;
+}
+ll inv(ll a)
+{
+	return power(a, MOD - 2);
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	cin >> n;
+	ll req = n * (n + 1) / 2;
+	if (req % 2)
+		cout << 0 << "\n";
+	else
+	{
+		req /= 2;
+		memset(dp, -1, sizeof(dp));
+		ll inv2 = inv(2);
+		cout << (F(1, req) * inv2) % MOD;
+	}
+	return 0;
+}

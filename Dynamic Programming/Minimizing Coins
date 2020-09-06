@@ -1,0 +1,29 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, x; cin >> n >> x;
+	vector<int>coins(n);
+	for (auto &it : coins)
+		cin >> it;
+	vector<int>dp(x + 1, 1e7);
+	dp[0] = 0;
+	for (int i = 1; i <= x; i++)
+	{
+		for (auto it : coins)
+		{
+			if (i - it >= 0)
+				dp[i] = min(dp[i], dp[i - it] + 1);
+		}
+	}
+	if (dp[x] == 1e7)
+		cout << -1;
+	else
+		cout << dp[x];
+	return 0;
+}

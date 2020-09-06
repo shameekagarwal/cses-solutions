@@ -1,0 +1,29 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, x; cin >> n >> x;
+	vector<vector<int>>dp(n + 1, vector<int>(x + 1, 0));
+	vector<int>cost(n);
+	vector<int>pages(n);
+	for (auto &it : cost)
+		cin >> it;
+	for (auto &it : pages)
+		cin >> it;
+	for (int i = 0; i < n; i++)
+	{
+		for (int j = 0; j <= x; j++)
+		{
+			dp[i + 1][j] = dp[i][j];
+			if (j - cost[i] >= 0)
+				dp[i + 1][j] = max(dp[i][j - cost[i]] + pages[i], dp[i + 1][j]);
+		}
+	}
+	cout << dp[n][x];
+	return 0;
+}

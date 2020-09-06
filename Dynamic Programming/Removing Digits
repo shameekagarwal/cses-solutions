@@ -1,0 +1,27 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int x; cin >> x;
+	vector<int>dp(x + 1, 1e7);
+	dp[0] = 0;
+	for (int i = 1; i <= x; i++)
+	{
+		vector<int>dig;
+		int tmp = i;
+		while (tmp)
+		{
+			dig.push_back(tmp % 10);
+			tmp /= 10;
+		}
+		for (auto it : dig)
+			dp[i] = min(dp[i], dp[i - it] + 1);
+	}
+	cout << dp[x];
+	return 0;
+}

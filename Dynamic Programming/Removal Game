@@ -1,0 +1,33 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n; cin >> n;
+	vector<int>a(n);
+	for (auto &it : a)
+		cin >> it;
+	vector<vector<ll>>dp(n, vector<ll>(n, 0));
+	for (int i = 0; i < n; i++)
+		dp[i][i] = a[i];
+	for (int i = 0; i < n - 1 && n > 1; i++)
+		dp[i][i + 1] = max(dp[i][i], dp[i + 1][i + 1]);
+	for (int len = 3; len <= n; len++)
+	{
+		int i = 0;
+		int j = i + len - 1;
+		while (j < n)
+		{
+			ll av = a[i] + min(dp[i + 2][j], dp[i + 1][j - 1]);
+			ll bv = a[j] + min(dp[i][j - 2], dp[i + 1][j - 1]);
+			dp[i][j] = max(av, bv);
+			i++; j++;
+		}
+	}
+	cout << dp[0][n - 1];
+	return 0;
+}
