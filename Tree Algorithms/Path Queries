@@ -1,0 +1,71 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 400100
+#define MOD 1000000007
+#define ll long long
+ll ar[sz];
+ll tr[sz];
+vector<ll>adj[sz];
+ll tin[sz];
+ll tout[sz];
+ll tim;
+void dfs(ll s, ll p)
+{
+	tin[s] = tim++;
+	for (auto it : adj[s])
+	{
+		if (it != p)
+			dfs(it, s);
+	}
+	tout[s] = tim++;
+}
+ll que(int s)
+{
+	ll ret = 0;
+	for (; s; s -= (s & (-s)))
+		ret += tr[s];
+	return ret;
+}
+void upd(int s, ll v)
+{
+	for (int i = s; i < sz; i += (i & (-i)))
+		tr[i] += v;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	ll v, n, q, x, y, a, b, tp; cin >> n >> q;
+	for (ll i = 1; i <= n; i++)
+		cin >> ar[i];
+	for (ll i = 0; i < n - 1; i++)
+	{
+		cin >> x >> y;
+		adj[x].push_back(y);
+		adj[y].push_back(x);
+	}
+	tim = 1;
+	dfs(1, 0);
+	for (ll i = 1; i <= n; i++)
+	{
+		upd(tin[i], ar[i]);
+		upd(tout[i], -ar[i]);
+	}
+	while (q--)
+	{
+		cin >> tp;
+		if (tp == 1)
+		{
+			cin >> a >> v;
+			upd(tin[a], v - ar[a]);
+			upd(tout[a], ar[a] - v);
+			ar[a] = v;
+		}
+		else
+		{
+			cin >> a;
+			cout << que(tin[a]) << "\n";
+		}
+	}
+	return 0;
+}

@@ -1,0 +1,97 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+unordered_map<int, int>um;
+int cnt[sz];
+vector<int> adj[sz];
+int tin[sz];
+int tout[sz];
+int tim;
+int par[20][sz];
+int dep[sz];
+void dfs(int s, int p)
+{
+	par[0][s] = p;
+	dep[s] = dep[p] + 1;
+	tin[s] = tim++;
+	for (auto it : adj[s])
+	{
+		if (it != p)
+			dfs(it, s);
+	}
+	tout[s] = tim++;
+}
+void pre(int n)
+{
+	for (int i = 1; i < 20; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			if (par[i - 1][j] != -1)
+				par[i][j] = par[i - 1][par[i - 1][j]];
+		}
+	}
+}
+int lca(int u, int v)
+{
+	if (dep[u] > dep[v])
+		swap(u, v);
+	for (int i = 0; i < 20; i++)
+	{
+		if (((dep[v] - dep[u]) >> i) & 1)
+			v = par[i][v];
+	}
+	if (u == v)
+		return u;
+	for (int i = 19; i > -1; i--)
+	{
+		if (par[i][u] != par[i][v])
+		{
+			u = par[i][u];
+			v = par[i][v];
+		}
+	}
+	return par[0][u];
+}
+int calc(int s, int p)
+{
+	cnt[s] = um[s];
+	for (auto it : adj[s])
+	{
+		if (it != p)
+			cnt[s] += calc(it, s);
+	}
+	return cnt[s];
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m, a, b; cin >> n >> m;
+	for (int i = 0; i < n - 1; i++)
+	{
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+	memset(par, -1, sizeof(par));
+	dfs(1, 0);
+	par[0][1] = -1;
+	pre(n);
+	unordered_map<int, int>us;
+	while (m--)
+	{
+		cin >> a >> b;
+		int l = lca(a, b);
+		um[l] -= 2;
+		um[a] += 1;
+		um[b] += 1;
+		us[l]++;
+	}
+	calc(1, 0);
+	for (int i = 1; i <= n; i++)
+		cout << cnt[i] + us[i] << " ";
+	return 0;
+}

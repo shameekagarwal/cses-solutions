@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+int dp[sz][2];
+void dfs(int src, int par)
+{
+	for (auto it : adj[src])
+	{
+		if (it != par)
+			dfs(it, src);
+	}
+	for (auto it : adj[src])
+	{
+		if (it != par)
+			dp[src][0] += max(dp[it][0], dp[it][1]);
+	}
+	for (auto it : adj[src])
+	{
+		if (it != par)
+		{
+			int v = 1 + dp[it][0] + dp[src][0] - max(dp[it][0], dp[it][1]);
+			dp[src][1] = max(dp[src][1], v);
+		}
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, a, b; cin >> n;
+	for (int i = 0; i < n - 1; i++)
+	{
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+	dfs(1, 0);
+	cout << max(dp[1][0], dp[1][1]);
+	return 0;
+}

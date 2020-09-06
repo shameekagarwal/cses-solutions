@@ -1,0 +1,93 @@
+
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+int tin[sz];
+int tout[sz];
+int tim;
+ll tr[8 * sz];
+int arr[sz];
+int revtin[2 * sz];
+void build(int s, int e, int idx)
+{
+	if (s == e)
+	{
+		if (revtin[s])
+			tr[idx] += arr[revtin[s]];
+		return;
+	}
+	int m = (s + e) / 2;
+	build(s, m, 2 * idx);
+	build(m + 1, e, 2 * idx + 1);
+	tr[idx] = tr[2 * idx] + tr[2 * idx + 1];
+}
+void upd(int s, int e, int idx, int i, int v)
+{
+	if (i > e || i < s)
+		return;
+	if (s == e)
+	{
+		tr[idx] = v;
+		return;
+	}
+	int m = (s + e) / 2;
+	upd(s, m, 2 * idx, i, v);
+	upd(m + 1, e, 2 * idx + 1, i, v);
+	tr[idx] = tr[2 * idx] + tr[2 * idx + 1];
+}
+ll que(int s, int e, int qs, int qe, int idx)
+{
+	if (qs > e || qe < s || qs > qe)
+		return 0;
+	if (qs <= s && qe >= e)
+		return tr[idx];
+	int m = (s + e) / 2;
+	ll a = que(s, m, qs, qe, 2 * idx);
+	ll b = que(m + 1, e, qs, qe, 2 * idx + 1);
+	return a + b;
+}
+void dfs(int s, int p)
+{
+	tin[s] = tim++;
+	revtin[tin[s]] = s;
+	for (auto it : adj[s])
+	{
+		if (it != p)
+			dfs(it, s);
+	}
+	tout[s] = tim++;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q, a, b, tp; cin >> n >> q;
+	for (int i = 1; i <= n; i++)
+		cin >> arr[i];
+	for (int i = 0; i < n - 1; i++)
+	{
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+	dfs(1, 0);
+	build(0, tout[1], 1);
+	while (q--)
+	{
+		cin >> tp;
+		if (tp == 1)
+		{
+			cin >> a >> b;
+			upd(0, tout[1], 1, tin[a], b);
+		}
+		else
+		{
+			cin >> a;
+			cout << que(0, tout[1], tin[a], tout[a], 1) << "\n";
+		}
+	}
+	return 0;
+}

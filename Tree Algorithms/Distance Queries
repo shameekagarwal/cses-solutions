@@ -1,0 +1,73 @@
+#include< bits / stdc ++. h >
+using namespace std ;
+#definesz 200100
+#defineMOD 1000000007
+#definell long long 
+intby [ 20 ] [ sz ];
+intdep [ sz ];
+vector<int> adj [ sz ];
+voiddfs ( int s , int p ) 
+{
+	dep[ s ] = dep [ p ] + 1 ;   
+	by[ 0 ] [ s ] = p ; 
+	for ( auto it : adj [ s ]) 
+	{
+		if ( it ! = p ) 
+			dfs( it , s );
+	}
+}
+voidpre ( int n )
+{
+	for ( int i = 1 ; i <= 19 ; i ++)   
+	{
+		for ( int j = 1 ; j <= n ; j ++)  
+		{
+			if ( by [ i - 1 ] [ j ] ! = - 1 )    
+				by[ i ] [ j ] = by [ i - 1 ] [ by [ i - 1 ] [ j ]];   
+		}
+	}
+}
+intlca ( int u , int v ) 
+{
+	if ( dep [ v ] < dep [ u ])  
+		swap( u , v );
+	for ( int i = 0 ; i <= 19 ; i ++)   
+	{
+		if ((( dep [ v ] - dep [ u ]) >> i ) & 1 )     
+			v = by [ i ] [ v ];
+	}
+	if ( u == v ) 
+		return u ;
+	for ( int i = 19 ; i > - 1 ; i -)   
+	{
+		if ( by [ i ] [ u ] ! = by [ i ] [ v ])  
+		{
+			u = by [ i ] [ u ];
+			v = by [ i ] [ v ];
+		}
+	}
+	return with [ 0 ] [ u ];
+}
+intmain ()
+{
+	ios:: sync_with_stdio ( 0 );
+	cin. tie ( 0 ); cost . tie ( 0 );
+	int n , q , a , b ; cin >> n >> q ;
+	for ( int i = 0 ; i < n - 1 ; i ++)   
+	{
+		cin >> a >> b ;
+		adj[ a ]. push_back ( b );
+		adj[ b ]. push_back ( a );
+	}
+	memset( par , - 1 , sizeof ( par ));  
+	dfs( 1 , 0 ); 
+	by[ 0 ] [ 1 ] = - 1 ;  
+	pre( n );
+	while ( q -) 
+	{
+		cin >> a >> b ;
+		int L = lca ( a , b );
+		cost << dep [ a ] + dep [ b ] - ( 2 * dep [ L ]) << "\ n" ;      
+	}
+	return 0 ; 
+}

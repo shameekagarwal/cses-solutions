@@ -1,0 +1,89 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+// max        - ansa
+// second max - ansb
+int ansa[sz];
+int ansb[sz];
+int idxa[sz];
+int idxb[sz];
+void dfs(int s, int p)
+{
+	for (auto it : adj[s])
+	{
+		if (it == p)
+			continue;
+		dfs(it, s);
+		if (ansa[s] < ansa[it] + 1)
+		{
+			ansb[s] = ansa[s];
+			idxb[s] = idxa[s];
+			ansa[s] = ansa[it] + 1;
+			idxa[s] = it;
+		}
+		else if (ansb[s] < ansa[it] + 1)
+		{
+			ansb[s] = ansa[it] + 1;
+			idxb[s] = it;
+		}
+	}
+}
+void calc(int s, int p)
+{
+	if (idxa[p] == s)
+	{
+		if (ansa[s] < ansb[p] + 1)
+		{
+			ansb[s] = ansa[s];
+			idxb[s] = idxa[s];
+			ansa[s] = ansb[p] + 1;
+			idxa[s] = p;
+		}
+		else if (ansb[s] < ansb[p] + 1)
+		{
+			ansb[s] = ansb[p] + 1;
+			idxb[s] = p;
+		}
+	}
+	else
+	{
+		if (ansa[s] < ansa[p] + 1)
+		{
+			ansb[s] = ansa[s];
+			idxb[s] = idxa[s];
+			ansa[s] = ansa[p] + 1;
+			idxa[s] = p;
+		}
+		else if (ansb[s] < ansa[p] + 1)
+		{
+			ansb[s] = ansa[p] + 1;
+			idxb[s] = p;
+		}
+	}
+	for (auto it : adj[s])
+	{
+		if (it != p)
+			calc(it, s);
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, x, y; cin >> n;
+	for (int i = 0; i < n - 1; ++i)
+	{
+		cin >> x >> y;
+		adj[x].push_back(y);
+		adj[y].push_back(x);
+	}
+	dfs(1, 0);
+	ansa[0] = ansb[0] = -1;
+	calc(1, 0);
+	for (int i = 1; i <= n; i++)
+		cout << ansa[i] << " ";
+	return 0;
+}

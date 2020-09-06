@@ -1,0 +1,44 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+int dia;
+int ht[sz];
+void dfs(int s, int p)
+{
+	ht[s] = 1;
+	int mxa, mxb;
+	mxa = mxb = 0;
+	for (auto it : adj[s])
+	{
+		if (it == p)
+			continue;
+		dfs(it, s);
+		ht[s] = max(ht[s], ht[it] + 1);
+		if (ht[it] > mxa)
+		{
+			mxb = mxa;
+			mxa = ht[it];
+		}
+		else if (ht[it] > mxb)
+			mxb = ht[it];
+	}
+	dia = max(dia, mxa + mxb);
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, a, b; cin >> n;
+	for (int i = 0; i < n - 1; i++)
+	{
+		cin >> a >> b;
+		adj[a].push_back(b);
+		adj[b].push_back(a);
+	}
+	dfs(1, 0);
+	cout << dia;
+	return 0;
+}

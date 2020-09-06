@@ -1,0 +1,74 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+int dep[sz];
+int par[20][sz];
+vector<int>adj[sz];
+void dfs(int s, int p)
+{
+	dep[s] = dep[p] + 1;
+	par[0][s] = p;
+	for (auto it : adj[s])
+	{
+		if (it != p)
+			dfs(it, s);
+	}
+}
+void pre(int n)
+{
+	for (int j = 1; j <= 19; j++)
+	{
+		for (int i = 1; i <= n; i++)
+		{
+			if (par[j - 1][i] != -1)
+				par[j][i] = par[j - 1][par[j - 1][i]];
+		}
+	}
+}
+int lca(int u, int v)
+{
+	if (dep[u] > dep[v])
+		swap(u, v);
+	if (dep[v] > dep[u])
+	{
+		for (int i = 0; i <= 19; i++)
+		{
+			if (((dep[v] - dep[u]) >> i) & 1)
+				v = par[i][v];
+		}
+	}
+	if (v == u)
+		return v;
+	for (int i = 19; i > -1; i--)
+	{
+		if (par[i][u] != par[i][v])
+		{
+			u = par[i][u];
+			v = par[i][v];
+		}
+	}
+	return par[0][u];
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q, x, y; cin >> n >> q;
+	for (int i = 2; i <= n; i++)
+	{
+		cin >> x;
+		adj[x].push_back(i);
+	}
+	memset(par, -1, sizeof(par));
+	dfs(1, 0);
+	par[0][1] = -1;
+	pre(n);
+	while (q--)
+	{
+		cin >> x >> y;
+		cout << lca(x, y) << "\n";
+	}
+	return 0;
+}

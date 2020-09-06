@@ -1,0 +1,66 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+int dep[sz];
+int par[18][sz];
+void dfs(int s, int p)
+{
+	dep[s] = dep[p] + 1;
+	par[0][s] = p;
+	for (auto it : adj[s])
+	{
+		if (it != p)
+			dfs(it, s);
+	}
+}
+void pre(int n)
+{
+	for (int i = 1; i < 18; i++)
+	{
+		for (int j = 1; j <= n; j++)
+		{
+			if (par[i - 1][j] != -1)
+			{
+				// cout << "par[" << i << "][" << j << "] = " << par[i - 1][par[i - 1][j]] << "\n";
+				par[i][j] = par[i - 1][par[i - 1][j]];
+			}
+		}
+	}
+}
+int calc(int s, int p)
+{
+	for (int i = 17; i > -1; i--)
+	{
+		if (p & (1 << i))
+		{
+			s = par[i][s];
+			if (s == -1)
+				return -1;
+		}
+	}
+	return s;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q, x, y; cin >> n >> q;
+	for (int i = 2; i <= n; i++)
+	{
+		cin >> x;
+		adj[x].push_back(i);
+	}
+	memset(par, -1, sizeof(par));
+	dfs(1, 0);
+	par[0][1] = -1;
+	pre(n);
+	while (q--)
+	{
+		cin >> x >> y;
+		cout << calc(x, y) << "\n";
+	}
+	return 0;
+}

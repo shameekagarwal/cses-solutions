@@ -1,0 +1,30 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+int ret[sz];
+int dfs(int a)
+{
+	int ans = 1;
+	for (auto it : adj[a])
+		ans += dfs(it);
+	ret[a] = ans - 1;
+	return ans;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, x, y; cin >> n;
+	for (int i = 2; i <= n; i++)
+	{
+		cin >> x;
+		adj[x].push_back(i);
+	}
+	dfs(1);
+	for (int i = 1; i <= n; i++)
+		cout << ret[i] << " ";
+	return 0;
+}
