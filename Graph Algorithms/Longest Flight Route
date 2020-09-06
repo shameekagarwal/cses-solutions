@@ -1,0 +1,67 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 100100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+int child[sz];
+int len[sz];
+bool vis[sz];
+bool reachesn[sz];
+int n;
+void dfs(int s)
+{
+	vis[s] = 1;
+	if (s == n)
+	{
+		reachesn[n] = 1;
+		return;
+	}
+	for (auto it : adj[s])
+	{
+		if (!vis[it])
+			dfs(it);
+	}
+	for (auto it : adj[s])
+	{
+		if (reachesn[it])
+		{
+			if (len[it] + 1 > len[s])
+			{
+				len[s] = len[it] + 1;
+				child[s] = it;
+				reachesn[s] = 1;
+			}
+		}
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int m; cin >> n >> m;
+	memset(child, -1, sizeof(child));
+	while (m--)
+	{
+		int a, b; cin >> a >> b;
+		adj[a].push_back(b);
+	}
+	dfs(1);
+	if (reachesn[1] == 0)
+	{
+		cout << "IMPOSSIBLE";
+		return 0;
+	}
+	int v = 1;
+	vector<int>ans;
+	while (v != n)
+	{
+		ans.push_back(v);
+		v = child[v];
+	}
+	ans.push_back(n);
+	cout << ans.size() << "\n";
+	for (auto it : ans)
+		cout << it << " ";
+	return 0;
+}

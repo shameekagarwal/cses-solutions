@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 100100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+int indeg[sz];
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m; cin >> n >> m;
+	while (m--)
+	{
+		int a, b; cin >> a >> b;
+		adj[a].push_back(b);
+		indeg[b]++;
+	}
+	queue<int>q;
+	for (int i = 1; i <= n; i++)
+	{
+		if (indeg[i] == 0)
+			q.push(i);
+	}
+	vector<int>ans;
+	while (!q.empty())
+	{
+		int c = q.front();
+		ans.push_back(c);
+		q.pop();
+		for (auto it : adj[c])
+		{
+			indeg[it]--;
+			if (indeg[it] == 0)
+				q.push(it);
+		}
+	}
+	if (ans.size() != n)
+	{
+		cout << "IMPOSSIBLE";
+		return 0;
+	}
+	for (auto it : ans)
+		cout << it << " ";
+	return 0;
+}

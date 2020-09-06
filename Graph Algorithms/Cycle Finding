@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 20010
+#define MOD 1000000007
+#define ll long long
+vector<vector<int>>edges;
+bool par[sz];
+bool vis[sz];
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m; cin >> n >> m;
+	while (m--)
+	{
+		int a, b, c; cin >> a >> b >> c;
+		edges.push_back({a, b, c});
+	}
+	vector<ll>dis(n + 1, 0);
+	vector<int>par(n + 1, -1);
+	for (int i = 0; i < n - 1; i++)
+	{
+		for (auto it : edges)
+		{
+			if (dis[it[1]] + it[2] < dis[it[0]])
+			{
+				dis[it[0]] = dis[it[1]] + it[2];
+				par[it[0]] = it[1];
+			}
+		}
+	}
+	int vtx = -1;
+	for (auto it : edges)
+	{
+		if (dis[it[1]] + it[2] < dis[it[0]])
+		{
+			vtx = it[0];
+			dis[it[0]] = dis[it[1]] + it[2];
+			par[it[0]] = it[1];
+		}
+	}
+	if (vtx == -1)
+	{
+		cout << "NO";
+		return 0;
+	}
+	cout << "YES\n";
+	for (int i = 1; i <= n; i++)
+		vtx = par[vtx];
+	int x = vtx;
+	do
+	{
+		cout << x << " ";
+		x = par[x];
+	} while (x != vtx);
+	cout << x;
+	return 0;
+}

@@ -1,0 +1,80 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+vector<pair<char, pair<int, int>>>dir;
+char mat[1005][1005];
+bool vis[1005][1005];
+char par[1005][1005];
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	dir.push_back({'D', {1, 0}});
+	dir.push_back({'U', { -1, 0}});
+	dir.push_back({'R', {0, 1}});
+	dir.push_back({'L', {0, -1}});
+	int n, m; cin >> n >> m;
+	int srcx, srcy, edx, edy;
+	srcx = srcy = edx = edy = -1;
+	for (int i = 0; i < n; i++) {
+		for (int j = 0; j < m; j++) {
+			cin >> mat[i][j];
+			if (mat[i][j] == 'A') {
+				srcx = i;
+				srcy = j;
+			}
+			if (mat[i][j] == 'B') {
+				edx = i;
+				edy = j;
+			}
+		}
+	}
+	queue<pair<int, int>>q;
+	q.push({srcx, srcy});
+	vis[srcx][srcy] = 1;
+	while (!q.empty()) {
+		pair<int, int>cur = q.front();
+		q.pop();
+		if (cur.first == edx && cur.second == edy) {
+			break;
+		}
+		for (auto it : dir) {
+			int nx = it.second.first + cur.first;
+			int ny = it.second.second + cur.second;
+			if ((nx > -1) && (ny > -1) && (nx < n) && (ny < m)) {
+				if (!vis[nx][ny] && (mat[nx][ny] == '.' || mat[nx][ny] == 'B')) {
+					vis[nx][ny] = 1;
+					par[nx][ny] = it.first;
+					q.push({nx, ny});
+				}
+			}
+		}
+	}
+	if (vis[edx][edy] == 0) {
+		cout << "NO";
+		return 0;
+	}
+	cout << "YES\n";
+	string ans = "";
+	while (edx != srcx || edy != srcy) {
+		ans.push_back(par[edx][edy]);
+		if (par[edx][edy] == 'D') {
+			edx--;
+		}
+		else if (par[edx][edy] == 'U') {
+			edx++;
+		}
+		else if (par[edx][edy] == 'L') {
+			edy++;
+		}
+		else if (par[edx][edy] == 'R') {
+			edy--;
+		}
+	}
+	reverse(ans.begin(), ans.end());
+	cout << ans.length() << "\n";
+	cout << ans;
+	return 0;
+}

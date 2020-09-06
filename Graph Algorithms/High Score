@@ -1,0 +1,40 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m; cin >> n >> m;
+	vector<vector<int>>edges;
+	while (m--)
+	{
+		int a, b, x; cin >> a >> b >> x;
+		edges.push_back({a, b, x});
+	}
+	vector<ll>dis(n + 1, -1e15);
+	dis[1] = 0;
+	for (int i = 1; i <= n - 1; i++)
+	{
+		for (auto it : edges)
+		{
+			if ((dis[it[0]] != -1e15) && (dis[it[0]] + it[2] > dis[it[1]]))
+				dis[it[1]] = dis[it[0]] + it[2];
+		}
+	}
+	for (int i = 1; i <= n - 1; i++)
+	{
+		for (auto it : edges)
+		{
+			if ((dis[it[0]] != -1e15) && (dis[it[0]] + it[2] > dis[it[1]]))
+				dis[it[1]] = 1e15;
+		}
+	}
+	if (dis[n] == 1e15)
+		cout << -1;
+	else
+		cout << dis[n];
+	return 0;
+}

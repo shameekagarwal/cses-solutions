@@ -1,0 +1,148 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+char mat[1010][1010];
+bool monsvis[1010][1010];
+int monsdis[1010][1010];
+bool srcvis[1010][1010];
+int srcdis[1010][1010];
+char par[1010][1010];
+int srcx, srcy;
+void printer(int i, int j)
+{
+	string ans;
+	while (i != srcx || j != srcy)
+	{
+		if (par[i][j] == 'U')
+		{
+			ans.push_back('D');
+			i--;
+		}
+		else if (par[i][j] == 'D')
+		{
+			ans.push_back('U');
+			i++;
+		}
+		else if (par[i][j] == 'L')
+		{
+			ans.push_back('R');
+			j--;
+		}
+		else if (par[i][j] == 'R')
+		{
+			ans.push_back('L');
+			j++;
+		}
+	}
+	reverse(ans.begin(), ans.end());
+	cout << "YES\n";
+	cout << ans.length() << "\n";
+	cout << ans;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+	vector<pair<int, int>>dir;
+	dir.push_back({1, 0});
+	dir.push_back({0, 1});
+	dir.push_back({ -1, 0});
+	dir.push_back({0, -1});
+	int r, c;
+	cin >> r >> c;
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < c; j++)
+		{
+			monsdis[i][j] = 1e7;
+			srcdis[i][j] = 1e8;
+		}
+	}
+	srcx = srcy = -1;
+	queue<pair<int, int>>q;
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < c; j++)
+		{
+			cin >> mat[i][j];
+			if (mat[i][j] == 'M')
+			{
+				q.push({i, j});
+				monsvis[i][j] = 1;
+				monsdis[i][j] = 0;
+			}
+			else if (mat[i][j] == 'A')
+			{
+				srcdis[i][j] = 0;
+				srcx = i;
+				srcy = j;
+			}
+		}
+	}
+	while (!q.empty())
+	{
+		pair<int, int>cur = q.front();
+		q.pop();
+		for (auto it : dir)
+		{
+			int nx = cur.first + it.first;
+			int ny = cur.second + it.second;
+			if (nx != -1 && ny != -1 && nx != r && ny != c)
+			{
+				if (!monsvis[nx][ny] && (mat[nx][ny] == '.' || mat[nx][ny] == 'A'))
+				{
+					monsvis[nx][ny] = 1;
+					monsdis[nx][ny] = monsdis[cur.first][cur.second] + 1;
+					q.push({nx, ny});
+				}
+			}
+		}
+	}
+	while (!q.empty())
+		q.pop();
+	q.push({srcx, srcy});
+	srcvis[srcx][srcy] = 1;
+	while (!q.empty())
+	{
+		pair<int, int>cur = q.front();
+		q.pop();
+		for (auto it : dir)
+		{
+			int nx = cur.first + it.first;
+			int ny = cur.second + it.second;
+			if (nx != -1 && ny != -1 && nx != r && ny != c)
+			{
+				if (!srcvis[nx][ny] && mat[nx][ny] == '.')
+				{
+					srcvis[nx][ny] = 1;
+					srcdis[nx][ny] = srcdis[cur.first][cur.second] + 1;
+					if (it == dir[0])
+						par[nx][ny] = 'U';
+					else if (it == dir[1])
+						par[nx][ny] = 'L';
+					else if (it == dir[2])
+						par[nx][ny] = 'D';
+					else if (it == dir[3])
+						par[nx][ny] = 'R';
+					q.push({nx, ny});
+				}
+			}
+		}
+	}
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < c; j++)
+		{
+			if ((i == r - 1 || j == c - 1 || i == 0 || j == 0) && (monsdis[i][j] > srcdis[i][j]))
+			{
+				printer(i, j);
+				return 0;
+			}
+		}
+	}
+	cout << "NO";
+	return 0;
+}

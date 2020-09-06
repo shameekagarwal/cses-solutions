@@ -1,0 +1,58 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 100100
+#define MOD 1000000007
+#define ll long long
+vector<int>adj[sz];
+bool vis[sz];
+bool stck[sz];
+int par[sz];
+void dfs(int s)
+{
+	vis[s] = 1;
+	stck[s] = 1;
+	for (auto it : adj[s])
+	{
+		if (!vis[it])
+		{
+			par[it] = s;
+			dfs(it);
+		}
+		else if (stck[it])
+		{
+			int v = s;
+			vector<int>ans;
+			while (v != it)
+			{
+				ans.push_back(v);
+				v = par[v];
+			}
+			ans.push_back(it);
+			reverse(ans.begin(), ans.end());
+			ans.push_back(v);
+			cout << ans.size() << "\n";
+			for (auto it : ans)
+				cout << it << " ";
+			exit(0);
+		}
+	}
+	stck[s] = 0;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m; cin >> n >> m;
+	while (m--)
+	{
+		int a, b; cin >> a >> b;
+		adj[a].push_back(b);
+	}
+	for (int i = 1; i <= n; i++)
+	{
+		if (!vis[i])
+			dfs(i);
+	}
+	cout << "IMPOSSIBLE";
+	return 0;
+}

@@ -1,0 +1,45 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+ll FW[600][600];
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m, q; cin >> n >> m >> q;
+	for (int i = 1; i <= n; i++)
+	{
+		for (int j = 1; j <= n; j++)
+			FW[i][j] = 1e14;
+	}
+	while (m--)
+	{
+		int a, b, c; cin >> a >> b >> c;
+		FW[min(a, b)][max(a, b)] = min(c + 0ll, FW[min(a, b)][max(a, b)]);
+	}
+	for (int k = 1; k <= n; k++)
+	{
+		for (int i = 1; i <= n; i++)
+		{
+			for (int j = 1; j <= n; j++)
+				FW[min(i, j)][max(i, j)] = min(FW[min(i, k)][max(i, k)] + FW[min(k, j)][max(k, j)], FW[min(i, j)][max(i, j)]);
+		}
+	}
+	while (q--)
+	{
+		int a, b; cin >> a >> b;
+		if (a == b)
+		{
+			cout << "0\n";
+			continue;
+		}
+		ll dis = FW[min(a, b)][max(a, b)];
+		if (dis == 1e14)
+			cout << "-1\n";
+		else
+			cout << dis << "\n";
+	}
+	return 0;
+}

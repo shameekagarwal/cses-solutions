@@ -1,0 +1,56 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+vector<vector<int>>edges;
+vector<pair<int, int>>adj[sz];
+vector<pair<int, int>>adjR[sz];
+void dijk(vector<ll>&dis, int src, bool G)
+{
+	int n = dis.size();
+	priority_queue<pair<ll, int>, vector<pair<ll, int>>, greater<pair<ll, int>>>pq;
+	pq.push({0, src});
+	vector<bool>vis(n);
+	while (!pq.empty())
+	{
+		pair<ll, int>cur = pq.top();
+		pq.pop();
+		if (vis[cur.second])
+			continue;
+		vis[cur.second] = 1;
+		dis[cur.second] = cur.first;
+		if (G)
+		{
+			for (auto it : adjR[cur.second])
+				pq.push({cur.first + it.second, it.first});
+		}
+		else
+		{
+			for (auto it : adj[cur.second])
+				pq.push({cur.first + it.second, it.first});
+		}
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, m; cin >> n >> m;
+	while (m--)
+	{
+		int a, b, c; cin >> a >> b >> c;
+		edges.push_back({a, b, c});
+		adj[a].push_back({b, c});
+		adjR[b].push_back({a, c});
+	}
+	vector<ll>dissrc(n + 1, 1e16);
+	vector<ll>disdest(n + 1, 1e16);
+	dijk(dissrc, 1, 0);
+	dijk(disdest, n, 1);
+	ll ans = dissrc[n];
+	for (auto it : edges)
+		ans = min(ans, dissrc[it[0]] + disdest[it[1]] + (it[2] / 2));
+	cout << ans;
+	return 0;
+}
