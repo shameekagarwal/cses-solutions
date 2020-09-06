@@ -1,0 +1,74 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 1010
+#define MOD 1000000007
+#define ll long long
+int tr[sz][sz];
+string mat[sz];
+void upd(int x, int y, int v)
+{
+	for (int i = x; i < sz; i += (i & -i))
+	{
+		for (int j = y; j < sz; j += (j & -j))
+			tr[i][j] += v;
+	}
+}
+int que(int x, int y)
+{
+	int sm = 0;
+	for (int i = x; i; i -= (i & -i))
+	{
+		for (int j = y; j; j -= (j & -j))
+			sm += tr[i][j];
+	}
+	return sm;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int r, c; cin >> r >> c;
+	for (int i = 0; i < r; ++i)
+		cin >> mat[i];
+	for (int i = 0; i < r; i++)
+	{
+		for (int j = 0; j < r; j++)
+		{
+			if (mat[i][j] == '*')
+				upd(i + 1, j + 1, 1);
+		}
+	}
+	while (c--)
+	{
+		int tp; cin >> tp;
+		if (tp == 1)
+		{
+			int L, R;
+			cin >> L >> R;
+			L--; R--;
+			int v;
+			if (mat[L][R] == '*')
+			{
+				mat[L][R] = '.';
+				v = -1;
+			}
+			else
+			{
+				mat[L][R] = '*';
+				v = 1;
+			}
+			upd(L + 1, R + 1, v);
+		}
+		else
+		{
+			int a, b, c, d;
+			cin >> a >> b >> c >> d;
+			int w = que(c, d);
+			int x = que(a - 1, d);
+			int y = que(c, b - 1);
+			int z = que(a - 1, b - 1);
+			cout << w - x - y + z << "\n";
+		}
+	}
+	return 0;
+}

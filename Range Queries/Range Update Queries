@@ -1,0 +1,59 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+ll tr[4 * sz];
+void upd(int s, int e, int i, int v, int idx)
+{
+	if (i < s || i > e)
+		return;
+	if (s == e)
+	{
+		tr[idx] += v;
+		return;
+	}
+	int m = (s + e) / 2;
+	upd(s, m, i, v, 2 * idx);
+	upd(m + 1, e, i, v, 2 * idx + 1);
+	tr[idx] = tr[2 * idx] + tr[2 * idx + 1];
+}
+ll que(int s, int e, int qs, int qe, int idx)
+{
+	if (qs > e || qe < s || qe < qs)
+		return 0;
+	if (qs <= s && qe >= e)
+		return tr[idx];
+	int m = (s + e) / 2;
+	ll a = que(s, m, qs, qe, 2 * idx);
+	ll b = que(m + 1, e, qs, qe, 2 * idx + 1);
+	return a + b;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q; ll v; cin >> n >> q;
+	for (int i = 0; i < n; ++i)
+	{
+		cin >> v;
+		upd(0, n - 1, i, v, 1);
+		upd(0, n - 1, i + 1, -v, 1);
+	}
+	while (q--)
+	{
+		int tp; cin >> tp;
+		if (tp == 1)
+		{
+			int L, R; cin >> L >> R >> v; L--; R--;
+			upd(0, n - 1, L, v, 1);
+			upd(0, n - 1, R + 1, -v, 1);
+		}
+		else
+		{
+			int L; cin >> L; L--;
+			cout << que(0, n - 1, 0, L, 1) << "\n";
+		}
+	}
+	return 0;
+}

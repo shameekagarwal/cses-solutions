@@ -1,0 +1,114 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+ll tr[4 * sz];
+ll lzyupd[4 * sz];
+ll lzyst[4 * sz];
+ll ar[sz];
+void build(int s, int e, int idx)
+{
+	if (s == e)
+	{
+		tr[idx] = ar[s];
+		return;
+	}
+	int m = (s + e) / 2;
+	build(s, m, 2 * idx);
+	build(m + 1, e, 2 * idx + 1);
+	tr[idx] = tr[2 * idx] + tr[2 * idx + 1];
+}
+void handle(int idx, int s, int e)
+{
+	if (lzyst[idx] != 0)
+	{
+		tr[idx] = ((e - s + 1) * lzyst[idx]);
+		if (s != e)
+		{
+			lzyst[2 * idx] = lzyst[idx];
+			lzyst[2 * idx + 1] = lzyst[idx];
+			// override all prev upds
+			lzyupd[2 * idx] = 0;
+			lzyupd[2 * idx + 1] = 0;
+		}
+		lzyst[idx] = 0;
+	}
+	if (lzyupd[idx] != 0)
+	{
+		tr[idx] += ((e - s + 1) * lzyupd[idx]);
+		if (s != e)
+		{
+			lzyupd[2 * idx] += lzyupd[idx];
+			lzyupd[2 * idx + 1] += lzyupd[idx];
+		}
+		lzyupd[idx] = 0;
+	}
+}
+void upd(int s, int e, int qs, int qe, int idx, ll v, bool op)
+{
+	handle(idx, s, e);
+	if (qs > e || qe < s || qs > qe)
+		return;
+	if (qs <= s && qe >= e)
+	{
+		if (op)
+			lzyupd[idx] = v;
+		else
+		{
+			// override all prev upds
+			lzyst[idx] = v;
+			lzyupd[idx] = 0;
+		}
+		handle(idx, s, e);
+		return;
+	}
+	int m = (s + e) / 2;
+	upd(s, m, qs, qe, 2 * idx, v, op);
+	upd(m + 1, e, qs, qe, 2 * idx + 1, v, op);
+	tr[idx] = tr[2 * idx] + tr[2 * idx + 1];
+}
+ll que(int s, int e, int qs, int qe, int idx)
+{
+	handle(idx, s, e);
+	if (qs > e || qe < s || qs > qe)
+		return 0;
+	if (qs <= s && qe >= e)
+		return tr[idx];
+	int m = (s + e) / 2;
+	ll a = que(s, m, qs, qe, 2 * idx);
+	ll b = que(m + 1, e, qs, qe, 2 * idx + 1);
+	return a + b;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q; cin >> n >> q;
+	for (int i = 0; i < n; ++i)
+		cin >> ar[i];
+	build(0, n - 1, 1);
+	while (q--)
+	{
+		int tp; cin >> tp;
+		if (tp == 1)
+		{
+			int L, R; ll v; cin >> L >> R >> v;
+			L--; R--;
+			upd(0, n - 1, L, R, 1, v, 1);
+		}
+		else if (tp == 2)
+		{
+			int L, R; ll v; cin >> L >> R >> v;
+			L--; R--;
+			upd(0, n - 1, L, R, 1, v, 0);
+		}
+		else
+		{
+			int L, R; cin >> L >> R;
+			L--; R--;
+			cout << que(0, n - 1, L, R, 1) << "\n";
+		}
+	}
+	return 0;
+}

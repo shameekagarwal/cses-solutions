@@ -1,0 +1,96 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+ll ar[sz];
+ll tr[4 * sz];
+ll lzya[4 * sz];
+ll lzycd[4 * sz];
+void build(int s, int e, int idx)
+{
+	if (s == e)
+	{
+		tr[idx] = ar[s];
+		return;
+	}
+	int m = (s + e) / 2;
+	build(s, m, 2 * idx);
+	build(m + 1, e, 2 * idx + 1);
+	tr[idx] = tr[2 * idx] + tr[2 * idx + 1];
+}
+// e.g. 1 2  3  4
+//      5 6  7  8
+//      6 8 10 12
+// add a and cd and find sum
+void handle(int idx, int s, int e)
+{
+	ll a = lzya[idx];
+	ll cd = lzycd[idx];
+	ll n = e - s + 1;
+	tr[idx] += (n * (2 * a + ((n - 1) * cd))) / 2;
+	if (s != e)
+	{
+		lzya[2 * idx] += lzya[idx];
+		lzycd[2 * idx] += lzycd[idx];
+		lzya[2 * idx + 1] += lzya[idx] + (((n / 2) + (n % 2)) * lzycd[idx]);
+		lzycd[2 * idx + 1] += lzycd[idx];
+	}
+	lzya[idx] = 0;
+	lzycd[idx] = 0;
+}
+void upd(int s, int e, int qs, int qe, int idx)
+{
+	handle(idx, s, e);
+	if (qs > e || qe < s || qs > qe)
+		return;
+	if (qs <= s && qe >= e)
+	{
+		lzya[idx] += s - qs + 1;
+		lzycd[idx]++;
+		handle(idx, s, e);
+		return;
+	}
+	int m = (s + e) / 2;
+	upd(s, m, qs, qe, 2 * idx);
+	upd(m + 1, e, qs, qe, 2 * idx + 1);
+	tr[idx] = tr[2 * idx] + tr[2 * idx + 1];
+}
+ll que(int s, int e, int qs, int qe, int idx)
+{
+	handle(idx, s, e);
+	if (qs > e || qe < s || qs > qe)
+		return 0;
+	if (qs <= s && qe >= e)
+		return tr[idx];
+	int m = (s + e) / 2;
+	ll a = que(s, m, qs, qe, 2 * idx);
+	ll b = que(m + 1, e, qs, qe, 2 * idx + 1);
+	return a + b;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q; cin >> n >> q;
+	for (int i = 0; i < n; ++i)
+		cin >> ar[i];
+	build(0, n - 1, 1);
+	while (q--)
+	{
+		int tp; cin >> tp;
+		if (tp == 1)
+		{
+			int L, R; cin >> L >> R;
+			L--; R--;
+			upd(0, n - 1, L, R, 1);
+		}
+		else
+		{
+			int L, R; cin >> L >> R;
+			L--; R--;
+			cout << que(0, n - 1, L, R, 1) << "\n";
+		}
+	}
+	return 0;
+}

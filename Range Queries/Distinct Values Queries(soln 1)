@@ -1,0 +1,40 @@
+#include<bits/stdc++.h>
+#include <ext/pb_ds/assoc_container.hpp>
+#include <ext/pb_ds/tree_policy.hpp>
+using namespace std;
+using namespace __gnu_pbds;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+typedef tree<int, null_type, less<int>, rb_tree_tag, tree_order_statistics_node_update> pbds;
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q; scanf("%d", &n); scanf("%d", &q);
+	vector<int>a(n);
+	vector<vector<pair<int, int>>>que(n);
+	for (int i = 0; i < n; i++)
+		scanf("%d", &a[i]);
+	vector<int>ans(q);
+	for (int i = 0; i < q; ++i)
+	{
+		int L, R;
+		scanf("%d", &L); scanf("%d", &R); L--; R--;
+		que[R].push_back({L, i});
+	}
+	pbds s;
+	map<int, int>um;
+	for (int i = 0; i < n; i++)
+	{
+		if (um.count(a[i]))
+			s.erase(um[a[i]]);
+		um[a[i]] = i;
+		s.insert(i);
+		for (auto it : que[i])
+			ans[it.second] = s.size() - s.order_of_key(it.first);
+	}
+	for (auto it : ans)
+		cout << it << "\n";
+	return 0;
+}

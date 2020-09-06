@@ -1,0 +1,46 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+int s[sz];
+void upd(int v, int idx)
+{
+	for (int i = idx; i < sz; i += (i & -i))
+		s[i] += v;
+}
+int query(int idx)
+{
+	int sm = 0;
+	for (; idx; idx -= (idx & -idx))
+		sm += s[idx];
+	return sm;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q; cin >> n >> q;
+	vector<int>a(n);
+	vector<vector<pair<int, int>>>que(n);
+	for (int i = 0; i < n; i++)
+		cin >> a[i];
+	vector<int>ans(q);
+	for (int i = 0; i < q; ++i)
+	{
+		int L, R;
+		cin >> L >> R; L--; R--;
+		que[R].push_back({L, i});
+	}
+	map<int, int>um;
+	for (int i = 0; i < n; i++)
+	{
+		if (um.count(a[i]))
+			upd(-1, um[a[i]]);
+		um[a[i]] = i + 1;
+		upd(1,  i + 1);
+		for (auto it : que[i])
+			ans[it.second] = query(n + 1) - query(it.first);
+	}
+	for (auto it : ans)
+		cout << it << "\n";
+	return 0;
+}

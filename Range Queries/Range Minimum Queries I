@@ -1,0 +1,41 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+int tbl[20][sz];
+int prelog[sz];
+void build(vector<int>&a)
+{
+	int n = a.size();
+	for (int i = 2; i <= n; i++)
+		prelog[i] = prelog[i / 2] + 1;
+	for (int i = 0; i < n; i++)
+		tbl[0][i] = a[i];
+	for (int i = 1; i <= prelog[n]; i++)
+	{
+		for (int j = 0; j + (1 << i) <= n; j++)
+			tbl[i][j] = min(tbl[i - 1][j], tbl[i - 1][j + (1 << (i - 1))]);
+	}
+}
+int que(int l, int r)
+{
+	int v = prelog[r - l + 1];
+	return min(tbl[v][l], tbl[v][r - (1 << v) + 1]);
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q; cin >> n >> q;
+	vector<int>a(n);
+	for (int i = 0; i < n; ++i)
+		cin >> a[i];
+	build(a);
+	while (q--)
+	{
+		int L, R; cin >> L >> R;
+		cout << que(L - 1, R - 1) << "\n";
+	}
+	return 0;
+}

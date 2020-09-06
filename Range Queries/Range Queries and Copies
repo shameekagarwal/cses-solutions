@@ -1,0 +1,84 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 200100
+#define MOD 1000000007
+#define ll long long
+ll tr[20 * sz];
+int L[20 * sz];
+int R[20 * sz];
+int ar[sz];
+int NFI;
+void build(int s, int e, int id)
+{
+	if (s == e)
+	{
+		tr[id] = ar[s];
+		return;
+	}
+	L[id] = NFI++;
+	R[id] = NFI++;
+	int m = (s + e) / 2;
+	build(s, m, L[id]);
+	build(m + 1, e, R[id]);
+	tr[id] = tr[L[id]] + tr[R[id]];
+}
+int upd(int s, int e, int i, int oldid, int v)
+{
+	int newid = NFI++;
+	if (s == e)
+	{
+		tr[newid] = v;
+		return newid;
+	}
+	L[newid] = L[oldid]; R[newid] = R[oldid];
+	int m = (s + e) / 2;
+	if (i <= m)
+		L[newid] = upd(s, m, i, L[oldid], v);
+	else
+		R[newid] = upd(m + 1, e, i, R[oldid], v);
+	tr[newid] = tr[L[newid]] + tr[R[newid]];
+	return newid;
+}
+ll que(int s, int e, int qs, int qe, int id)
+{
+	if (s > qe || e < qs || qs > qe)
+		return 0;
+	if (qs <= s && qe >= e)
+		return tr[id];
+	int m = (s + e) / 2;
+	ll a = que(s, m, qs, qe, L[id]);
+	ll b = que(m + 1, e, qs, qe, R[id]);
+	return a + b;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n, q; cin >> n >> q;
+	for (int i = 0; i < n; ++i)
+		cin >> ar[i];
+	NFI = 2;
+	build(0, n - 1, 1);
+	vector<int>arrays;
+	arrays.push_back(1);
+	while (q--)
+	{
+		int tp; cin >> tp;
+		if (tp == 1)
+		{
+			int k, a, x; cin >> k >> a >> x;
+			arrays[k - 1] = upd(0, n - 1, a - 1, arrays[k - 1], x);
+		}
+		else if (tp == 2)
+		{
+			int k, a, b; cin >> k >> a >> b;
+			cout << que(0, n - 1, a - 1, b - 1, arrays[k - 1]) << "\n";
+		}
+		else
+		{
+			int k; cin >> k;
+			arrays.push_back(arrays[k - 1]);
+		}
+	}
+	return 0;
+}
