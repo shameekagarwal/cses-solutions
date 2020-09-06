@@ -1,0 +1,69 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+string s;
+bool vis[7][7];
+int ans;
+void F(int idx, int x, int y)
+{
+	if (x == 6 && y == 0)
+	{
+		ans += (idx == 48);
+		return;
+	}
+	if (idx == 48)
+		return;
+	if (x < 0 || x > 6 || y < 0 || y > 6 || vis[x][y])
+		return;
+	vis[x][y] = 1;
+	if (x > 0 && x < 6)
+	{
+		if ((y == 0 && vis[x][y + 1]) || (y == 6 && vis[x][y - 1]) || (vis[x][y - 1] && vis[x][y + 1]))
+		{
+			if (!vis[x + 1][y] && !vis[x - 1][y])
+			{
+				vis[x][y] = 0;
+				return;
+			}
+		}
+	}
+	if (y > 0 && y < 6)
+	{
+		if ((x == 0 && vis[x + 1][y]) || (x == 6 && vis[x - 1][y]) || (vis[x - 1][y] && vis[x + 1][y]))
+		{
+			if (!vis[x][y + 1] && !vis[x][y - 1])
+			{
+				vis[x][y] = 0;
+				return;
+			}
+		}
+	}
+	if (s[idx] != '?')
+	{
+		if (s[idx] == 'D')
+			F(idx + 1, x + 1, y);
+		else if (s[idx] == 'U')
+			F(idx + 1, x - 1, y);
+		else if (s[idx] == 'L')
+			F(idx + 1, x, y - 1);
+		else
+			F(idx + 1, x, y + 1);
+	}
+	else
+	{
+		F(idx + 1, x + 1, y);
+		F(idx + 1, x - 1, y);
+		F(idx + 1, x, y - 1);
+		F(idx + 1, x, y + 1);
+	}
+	vis[x][y] = 0;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	cin >> s;
+	F(0, 0, 0);
+	cout << ans;
+	return 0;
+}

@@ -1,0 +1,45 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+ 
+vector<string>mat(8);
+int ans;
+int boundary;
+ 
+void F(int idx, int down, int left, int right)
+{
+	if (idx == 8)
+	{
+		ans++;
+		return;
+	}
+	for (int i = 0; i < 8; i++)
+	{
+		if (mat[idx][i] == '.')
+		{
+			bool a = ((down | left | right) >> i) & 1;
+			if (!a)
+			{
+				int curdown = down | (1 << i);
+				int curleft = ((left << 1) | (1 << (i + 1))) & boundary;
+				int curright = ((right >> 1) | (1 << (i - 1))) & boundary;
+				F(idx + 1, curdown, curleft, curright);
+			}
+		}
+	}
+}
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+ 
+	for (auto &it : mat)
+		cin >> it;
+	boundary = (1 << 8) - 1;
+	F(0, 0, 0, 0);
+	cout << ans;
+	return 0;
+}

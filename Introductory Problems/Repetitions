@@ -1,0 +1,27 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	string s; cin >> s;
+	char prev = 'X';
+	int n = s.length();
+	int cnt = 0;
+	int ans = 0;
+	for (int i = 0; i < n; i++)
+	{
+		if (s[i] == prev)
+			cnt++;
+		else
+		{
+			cnt = 1;
+			prev = s[i];
+		}
+		ans = max(ans, cnt);
+	}
+	cout << ans;
+	return 0;
+}

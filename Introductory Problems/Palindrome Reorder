@@ -1,0 +1,49 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	string s; cin >> s;
+	int n = s.length();
+	vector<int>cnt(26, 0);
+	for (int i = 0; i < n; i++)
+		cnt[s[i] - 'A']++;
+	int odd = 0;
+	for (auto it : cnt)
+		odd += (it % 2);
+	if (odd > 1)
+	{
+		cout << "NO SOLUTION";
+		return 0;
+	}
+	deque<char>D;
+	char join = '!';
+	for (int i = 0; i < 26; i++)
+	{
+		int x = cnt[i];
+		while (x > 1)
+		{
+			D.push_back((char)('A' + i));
+			D.push_front((char)('A' + i));
+			x -= 2;
+		}
+		if (x)
+			join = (char)('A' + i);
+	}
+	for (int i = 0; i < n; i++)
+	{
+		if (n % 2 == 0 || i != n - 1)
+			cout << D.front();
+		D.pop_front();
+		if (n % 2 && i == n / 2 - 1)
+			cout << join;
+	}
+	if (n == 1)
+		cout << s;
+	return 0;
+}

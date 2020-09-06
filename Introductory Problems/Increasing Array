@@ -1,0 +1,26 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n; cin >> n;
+	vector<int>a(n);
+	for (auto &it : a)
+		cin >> it;
+	int prev = a[0];
+	ll ans = 0;
+	for (int i = 1; i < n; i++)
+	{
+		if (a[i] < prev)
+		{
+			ans += (prev - a[i]);
+			a[i] = prev;
+		}
+		prev = a[i];
+	}
+	cout << ans;
+	return 0;
+}

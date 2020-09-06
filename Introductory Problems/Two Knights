@@ -1,0 +1,19 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	ll n; cin >> n;
+	for (ll i = 1; i <= n; i++)
+	{
+		ll tot = i * i;
+		ll poss = tot * (tot - 1) / 2;
+		ll rect1 = (i - 2) * (i - 1);
+		ll rect2 = (i - 1) * (i - 2);
+		cout << (poss - (2 * (rect1 + rect2))) << "\n";
+	}
+	return 0;
+}

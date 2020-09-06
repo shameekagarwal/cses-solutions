@@ -1,0 +1,43 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int n; cin >> n;
+	if ((n % 4 == 1) || (n % 4 == 2))
+		cout << "NO";
+	else if (n % 4 == 3)
+	{
+		cout << "YES\n";
+		cout << (n / 2 + 1) << "\n";
+		cout << "1 2 ";
+		vector<int>two = {3};
+		for (int i = 4; i <= n; i += 4)
+		{
+			cout << i << " " << (i + 3) << " ";
+			two.push_back(i + 1);
+			two.push_back(i + 2);
+		}
+		cout << "\n" << two.size() << "\n";
+		for (auto it : two)
+			cout << it << " ";
+	}
+	else
+	{
+		cout << "YES\n";
+		cout << n / 2 << "\n";
+		vector<int>two;
+		for (int i = 1; i <= n; i += 4)
+		{
+			cout << i << " " << (i + 3) << " ";
+			two.push_back(i + 1);
+			two.push_back(i + 2);
+		}
+		cout << "\n" << two.size() << "\n";
+		for (auto it : two)
+			cout << it << " ";
+	}
+	return 0;
+}

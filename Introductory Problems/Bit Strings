@@ -1,0 +1,26 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define MOD 1000000007
+#define ll long long
+ll power(ll a, ll b)
+{
+	a = a % MOD;
+	ll res = 1;
+	while (b)
+	{
+		if (b & 1)
+			res = (res * a) % MOD;
+		b >>= 1;
+		a = (a * a) % MOD;
+	}
+	return res;
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	ll n; cin >> n;
+	cout << power(2, n);
+	return 0;
+}

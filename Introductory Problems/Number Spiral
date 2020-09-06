@@ -1,0 +1,31 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define ll long long
+ 
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int t; cin >> t;
+	while (t--)
+	{
+		ll x, y; cin >> x >> y;
+		ll mx = max(x, y);
+		ll diag = ((mx * mx) - mx + 1);
+		if (y == mx)
+		{
+			if (y % 2)
+				cout << diag + (y - x) << "\n";
+			else
+				cout << diag + (x - y) << "\n";
+		}
+		else
+		{
+			if (x % 2)
+				cout << diag + (y - x) << "\n";
+			else
+				cout << diag + (x - y) << "\n";
+		}
+	}
+	return 0;
+}

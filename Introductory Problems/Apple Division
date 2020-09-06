@@ -1,0 +1,33 @@
+#include<bits/stdc++.h>
+using namespace std;
+#define sz 10010
+#define ll long long
+ll sm, ans;
+int n;
+vector<int>a;
+void F(int idx, ll cur)
+{
+	if (idx == n)
+	{
+		ans = min(ans, abs(sm - 2 * cur));
+		return;
+	}
+	F(idx + 1, cur + a[idx]);
+	F(idx + 1, cur);
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	cin >> n;
+	a = vector<int>(n);
+	for (auto & it : a)
+	{
+		cin >> it;
+		sm += it;
+	}
+	ans = LLONG_MAX;
+	F(0, 0);
+	cout << ans;
+	return 0;
+}

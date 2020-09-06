@@ -1,0 +1,37 @@
+#include<bits/stdc++.h>
+using namespace std;
+string s;
+int n;
+set<string>ans;
+void F(vector<bool>&used, int idx, string cur)
+{
+	if (idx == n)
+	{
+		ans.insert(cur);
+		return;
+	}
+	for (int i = 0; i < n; i++)
+	{
+		if (!used[i])
+		{
+			cur[idx] = s[i];
+			used[i] = 1;
+			F(used, idx + 1, cur);
+			used[i] = 0;
+		}
+	}
+}
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	cin >> s;
+	sort(s.begin(), s.end());
+	n = s.length();
+	vector<bool>used(n, 0);
+	F(used, 0, s);
+	cout << ans.size() << "\n";
+	for (auto it : ans)
+		cout << it << "\n";
+	return 0;
+}

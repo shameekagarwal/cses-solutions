@@ -1,0 +1,24 @@
+#include<bits/stdc++.h>
+using namespace std;
+int main()
+{
+	ios::sync_with_stdio(0);
+	cin.tie(0); cout.tie(0);
+	int t; cin >> t;
+	while (t--)
+	{
+		int a, b; cin >> a >> b;
+		if ((a + b) % 3)
+		{
+			cout << "NO\n";
+			continue;
+		}
+		int x = a - ((a + b) / 3);
+		int y = b - ((a + b) / 3);
+		if (x < 0 || y < 0)
+			cout << "NO\n";
+		else
+			cout << "YES\n";
+	}
+	return 0;
+}
