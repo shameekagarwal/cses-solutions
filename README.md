@@ -1,3 +1,3 @@
-solution to 148 problems of cses
+# cses solutions
 
-i couldnt solve two questions of strings as it involved aho corasik
+my solutions to the [cses problem set](https://cses.fi/problemset/)
